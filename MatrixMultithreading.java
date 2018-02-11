@@ -1,10 +1,7 @@
-import java.io.BufferedReader;
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.Scanner;
-import java.util.ArrayList;
 
 public class MatrixMultithreading {
 	
@@ -57,7 +54,7 @@ public class MatrixMultithreading {
 	}
 	
 	public static int[] matrixDimensions(ArrayList<String> matrixData) {
-		int[] dimensions = new int[4];
+      int[] dimensions = new int[4];
       String dimensionsString = matrixData.get(0);
       dimensionsString = dimensionsString.replaceAll("\\D+","");
       
@@ -65,6 +62,6 @@ public class MatrixMultithreading {
          dimensions[i] = Character.getNumericValue(dimensionsString.charAt(i));
       }
 		
-		return dimensions;
-	}
+      return dimensions;
+   }
 }
