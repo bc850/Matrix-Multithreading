@@ -14,9 +14,8 @@ public class MatrixMultithreading {
 	public static int[][] finalMatrix = new int[0][0];
 	
 	public static void main(String[] args) {
-		ArrayList<String> matrixData = new ArrayList<String>();
 		String matrixDataFile = new String();
-		String dimensions = new String();
+		int[] dimensions = new int[4];
 		
 		if(args.length > 0) {
 			matrixDataFile = args[0];
@@ -26,34 +25,45 @@ public class MatrixMultithreading {
 		}
 		
 		// run grabData method
-		matrixData = grabData(matrixDataFile);
+		ArrayList<String> matrixData = new ArrayList<String>(grabData(matrixDataFile));
 		
 		// get Matrix dimensions
 		dimensions = matrixDimensions(matrixData);
+      
+      // Test matrix dimensions to see if they can be multiplied
+      if(dimensions[1] != dimensions[2]) {
+         System.out.println("These matrices cannot be multiplied.");
+         System.exit(0);
+      }
+      
 	}
 	
 	// method for reading in data from file
 	public static ArrayList<String> grabData(String matrixDataFile) {
 		ArrayList<String> data = new ArrayList<String>();
 		String line = new String();
-		try {
-			//FileReader file = new FileReader(matrixDataFile);
-			BufferedReader reader = new BufferedReader(new FileReader(matrixDataFile));
-			while ((line = reader.readLine()) != null) {
-				data.add(line);
-			}
-		} catch(FileNotFoundException e) {
-			e.printStackTrace();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
 		
-		return data;
+      try{
+         Scanner s = new Scanner(new File(matrixDataFile));
+         while (s.hasNextLine()){
+            data.add(s.nextLine());
+         }
+         s.close();
+      } catch(FileNotFoundException e) {
+         e.printStackTrace();
+		}
+      
+      return data;
 	}
 	
-	public static String matrixDimensions(ArrayList<String> matrixData) {
-		String dimensions = new String();
-		dimensions = matrixData.get(0);
+	public static int[] matrixDimensions(ArrayList<String> matrixData) {
+		int[] dimensions = new int[4];
+      String dimensionsString = matrixData.get(0);
+      dimensionsString = dimensionsString.replaceAll("\\D+","");
+      
+      for(int i = 0; i < dimensionsString.length(); i++) {
+         dimensions[i] = Character.getNumericValue(dimensionsString.charAt(i));
+      }
 		
 		return dimensions;
 	}
