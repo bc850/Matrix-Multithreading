@@ -1,3 +1,10 @@
+/*
+** Course:     CS4345
+** Semester:   Spring 2018
+** Assignment: Program 1
+** Author:     Brandon Corbett
+*/
+
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.File;
@@ -9,6 +16,7 @@ public class MatrixMultithreading {
 	public static int[][] matrixA = new int[0][0];
 	public static int[][] matrixB = new int[0][0];
 	public static int[][] finalMatrix = new int[0][0];
+   public static int result = 0;
 	
 	public static void main(String[] args) {
 		String matrixDataFile = new String();
@@ -46,20 +54,31 @@ public class MatrixMultithreading {
       tempA = buildMatrix(matrixData, tempA, dimArr1);
       
       // remove lines from matrixData to build second matrix
-      for(int i = 0; i < tempA.length; i++) {
+      for(int i = 0; i <= tempA.length; i++) {
          matrixData.remove(0);
       }
-      
-      matrixData.remove(0);
       
       // build the second matrix
       tempB = buildMatrix(matrixData, tempB, dimArr2);
       
-      printMatrices(tempA, dimArr1);
+      // clone matrixes to global arrays 
+      matrixA = tempA.clone();
+      matrixB = tempB.clone();
+      
+      // build finalMatrix to clone to global
+      int[][] fm = new int[dimArr3[0]][dimArr3[1]];
+      finalMatrix = fm.clone();
+      
+      printMatrices(matrixA, dimArr1);
       System.out.println();
-      System.out.println("----------");
+      printMatrices(matrixB, dimArr2);
+      
+      int a = 1, b = 1;
+      ThreadClass tc = new ThreadClass();
+      tc.setMatrix(matrixA, matrixB, dimArr1, dimArr2);
       System.out.println();
-      printMatrices(tempB, dimArr2);
+      System.out.println(result);
+      
 	}
 	
 	public static ArrayList<String> grabData(String matrixDataFile) {
@@ -122,5 +141,35 @@ public class MatrixMultithreading {
          }
          System.out.println();
       }
+   }
+}
+
+class ThreadClass extends Thread {
+   private static int a, b;
+   private static int[][] matrix1 = new int[0][0];
+   private static int[][] matrix2 = new int[0][0];
+   private static int[] dim1 = new int[0];
+   private static int[] dim2 = new int[0];
+   
+   public void run() {
+      
+   }
+   
+   public void setAB(int a, int b) {
+      this.a = a;
+      this.b = b;
+   }
+   
+   public void setMatrix(int[][] matrix1, int[][] matrix2, int[] dim1, int[] dim2) {
+      this.matrix1 = matrix1.clone();
+      this.matrix2 = matrix2.clone();
+      this.dim1 = dim1.clone();
+      this.dim2 = dim2.clone();
+   }
+   
+   public void matrixMultiplication(){
+      int returnValue = 69;
+      
+      MatrixMultithreading.result = returnValue;
    }
 }
