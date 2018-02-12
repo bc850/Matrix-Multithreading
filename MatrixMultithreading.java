@@ -13,6 +13,9 @@ public class MatrixMultithreading {
 	public static void main(String[] args) {
 		String matrixDataFile = new String();
 		int[] dimensions = new int[4];
+      int[] dimArr1 = new int[2];
+      int[] dimArr2 = new int[2];
+      int[] dimArr3 = new int[2];
 		
 		if(args.length > 0) {
 			matrixDataFile = args[0];
@@ -26,16 +29,39 @@ public class MatrixMultithreading {
 		
 		// get Matrix dimensions
 		dimensions = matrixDimensions(matrixData);
+      dimArr1[0] = dimensions[0];
+      dimArr1[1] = dimensions[1];
+      dimArr2[0] = dimensions[2];
+      dimArr2[1] = dimensions[3];
+      dimArr3[0] = dimensions[0];
+      dimArr3[1] = dimensions[3];
       
-      // Test matrix dimensions to see if they can be multiplied
-      if(dimensions[1] != dimensions[2]) {
-         System.out.println("These matrices cannot be multiplied.");
-         System.exit(0);
+      // temp arrays before cloning with correct dimensions
+      int[][] tempA = new int[dimensions[0]][dimensions[1]];
+      int[][] tempB = new int[dimensions[2]][dimensions[3]];
+      
+      // build the first matrix
+      matrixData.remove(0);
+      matrixData.remove(0);
+      tempA = buildMatrix(matrixData, tempA, dimArr1);
+      
+      // remove lines from matrixData to build second matrix
+      for(int i = 0; i < tempA.length; i++) {
+         matrixData.remove(0);
       }
       
+      matrixData.remove(0);
+      
+      // build the second matrix
+      tempB = buildMatrix(matrixData, tempB, dimArr2);
+      
+      printMatrices(tempA, dimArr1);
+      System.out.println();
+      System.out.println("----------");
+      System.out.println();
+      printMatrices(tempB, dimArr2);
 	}
 	
-	// method for reading in data from file
 	public static ArrayList<String> grabData(String matrixDataFile) {
 		ArrayList<String> data = new ArrayList<String>();
 		String line = new String();
@@ -53,7 +79,7 @@ public class MatrixMultithreading {
       return data;
 	}
 	
-	public static int[] matrixDimensions(ArrayList<String> matrixData) {
+   public static int[] matrixDimensions(ArrayList<String> matrixData) {
       int[] dimensions = new int[4];
       String dimensionsString = matrixData.get(0);
       dimensionsString = dimensionsString.replaceAll("\\D+","");
@@ -61,7 +87,40 @@ public class MatrixMultithreading {
       for(int i = 0; i < dimensionsString.length(); i++) {
          dimensions[i] = Character.getNumericValue(dimensionsString.charAt(i));
       }
+      
+      // Test matrix dimensions to see if they can be multiplied
+      if(dimensions[1] != dimensions[2]) {
+         System.out.println("These matrices cannot be multiplied.");
+         System.exit(0);
+      }
 		
       return dimensions;
+   }
+   
+   public static int[][] buildMatrix(ArrayList<String> matrixData, int[][] tempMatrix, int[] dimensions) {
+      int[][] builtMatrix = new int[dimensions[0]][dimensions[1]];
+      
+      for (int i = 0; i < tempMatrix.length; i++) {
+			int counter = 0;
+			String[] nums = matrixData.get(i).split("\\s+");
+			for (int j = 0; j < nums.length; j++) {
+            try {
+				   builtMatrix[i][j] = Integer.parseInt(nums[j]);
+            } catch (NumberFormatException e) {
+               e.printStackTrace();
+            }
+			}
+		}
+      
+      return builtMatrix;
+   }
+   
+   public static void printMatrices(int[][] matrices, int[] dimensions) {
+      for(int i = 0; i < matrices.length; i++) {
+         for(int j = 0; j < dimensions[1]; j++) {
+            System.out.print(matrices[i][j] + "\t");
+         }
+         System.out.println();
+      }
    }
 }
