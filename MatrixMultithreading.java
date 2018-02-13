@@ -16,7 +16,6 @@ public class MatrixMultithreading {
 	public static int[][] matrixA = new int[0][0];
 	public static int[][] matrixB = new int[0][0];
 	public static int[][] finalMatrix = new int[0][0];
-   public static int result = 0;
 	
 	public static void main(String[] args) {
 		String matrixDataFile = new String();
@@ -69,16 +68,39 @@ public class MatrixMultithreading {
       int[][] fm = new int[dimArr3[0]][dimArr3[1]];
       finalMatrix = fm.clone();
       
-      printMatrices(matrixA, dimArr1);
-      System.out.println();
-      printMatrices(matrixB, dimArr2);
+      //printMatrices(matrixA, dimArr1);
+      //System.out.println();
+      //printMatrices(matrixB, dimArr2);
       
-      int a = 1, b = 1;
-      ThreadClass tc = new ThreadClass();
-      tc.setMatrix(matrixA, matrixB, dimArr1, dimArr2);
-      System.out.println();
-      System.out.println(result);
+      // ArrayList<Thread> for storing thread objects 
+      ArrayList<Thread> coolThreads = new ArrayList<Thread>();
       
+      // loop through finalMatrix to set values for objects in coolThreads
+      int threadCount = 0;
+      for(int i = 0; i < finalMatrix.length; i++) {
+         for(int j = 0; j < finalMatrix[i].length; j++) {
+            ThreadClass tc = new ThreadClass(i, j);
+            coolThreads.add(new Thread(tc));
+         }
+      }
+      
+      // start multithreading
+      for(int i = 0; i < coolThreads.size(); i++) {
+         coolThreads.get(i).start();
+      }
+      
+      // sleep the main thread while others are running
+      try {
+         Thread.sleep(4000);
+      } catch (InterruptedException e) {
+         e.printStackTrace();
+      }
+      
+      // print final matrix
+      System.out.println();
+      System.out.println("----------");
+      System.out.println();
+      printMatrices(finalMatrix, dimArr3);
 	}
 	
 	public static ArrayList<String> grabData(String matrixDataFile) {
@@ -107,7 +129,6 @@ public class MatrixMultithreading {
          dimensions[i] = Character.getNumericValue(dimensionsString.charAt(i));
       }
       
-      // Test matrix dimensions to see if they can be multiplied
       if(dimensions[1] != dimensions[2]) {
          System.out.println("These matrices cannot be multiplied.");
          System.exit(0);
@@ -145,31 +166,31 @@ public class MatrixMultithreading {
 }
 
 class ThreadClass extends Thread {
-   private static int a, b;
-   private static int[][] matrix1 = new int[0][0];
-   private static int[][] matrix2 = new int[0][0];
-   private static int[] dim1 = new int[0];
-   private static int[] dim2 = new int[0];
+   private int a, b;
    
-   public void run() {
-      
-   }
-   
-   public void setAB(int a, int b) {
+   public ThreadClass(int a, int b) {
       this.a = a;
       this.b = b;
    }
    
-   public void setMatrix(int[][] matrix1, int[][] matrix2, int[] dim1, int[] dim2) {
-      this.matrix1 = matrix1.clone();
-      this.matrix2 = matrix2.clone();
-      this.dim1 = dim1.clone();
-      this.dim2 = dim2.clone();
+   public void run() {
+      System.out.println("Starting multiplication for thread [" + a + ", " + b + "]");
+      matrixMultiplication();
+      System.out.println("Thread [" + a + ", " + b + "] result: " + MatrixMultithreading.finalMatrix[a][b]);
    }
    
-   public void matrixMultiplication(){
-      int returnValue = 69;
-      
-      MatrixMultithreading.result = returnValue;
+   public void matrixMultiplication() {
+      int result = 0;
+      int multArr[] = new int[MatrixMultithreading.matrixA[a].length];
+      for (int i = 0; i < MatrixMultithreading.matrixA[a].length; i++) {
+			multArr[i] = MatrixMultithreading.matrixA[a][i] * MatrixMultithreading.matrixB[i][b];
+		}
+
+		for (int i = 0; i < multArr.length; i++) {
+			result += multArr[i];
+		}
+
+		MatrixMultithreading.finalMatrix[a][b] = result;
+
    }
 }
