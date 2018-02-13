@@ -68,9 +68,20 @@ public class MatrixMultithreading {
       int[][] fm = new int[dimArr3[0]][dimArr3[1]];
       finalMatrix = fm.clone();
       
-      //printMatrices(matrixA, dimArr1);
-      //System.out.println();
-      //printMatrices(matrixB, dimArr2);
+      System.out.println("----------");
+      System.out.println();
+      System.out.println("Matrix A");
+      System.out.println();
+      printMatrices(matrixA, dimArr1);
+      System.out.println();
+      System.out.println("----------");
+      System.out.println();
+      System.out.println("Matrix B");
+      System.out.println();
+      printMatrices(matrixB, dimArr2);
+      System.out.println();
+      System.out.println("----------");
+      System.out.println();
       
       // ArrayList<Thread> for storing thread objects 
       ArrayList<Thread> coolThreads = new ArrayList<Thread>();
@@ -99,6 +110,8 @@ public class MatrixMultithreading {
       // print final matrix
       System.out.println();
       System.out.println("----------");
+      System.out.println();
+      System.out.println("Final matrix output:");
       System.out.println();
       printMatrices(finalMatrix, dimArr3);
 	}
@@ -132,6 +145,9 @@ public class MatrixMultithreading {
       if(dimensions[1] != dimensions[2]) {
          System.out.println("These matrices cannot be multiplied.");
          System.exit(0);
+      } else {
+         System.out.println("Theses matrices can be multiplied.");
+         System.out.println();
       }
 		
       return dimensions;
