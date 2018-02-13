@@ -181,16 +181,10 @@ class ThreadClass extends Thread {
    
    public void matrixMultiplication() {
       int result = 0;
-      int multArr[] = new int[MatrixMultithreading.matrixA[a].length];
       for (int i = 0; i < MatrixMultithreading.matrixA[a].length; i++) {
-			multArr[i] = MatrixMultithreading.matrixA[a][i] * MatrixMultithreading.matrixB[i][b];
-		}
-
-		for (int i = 0; i < multArr.length; i++) {
-			result += multArr[i];
-		}
+			result += MatrixMultithreading.matrixA[a][i] * MatrixMultithreading.matrixB[i][b];
+      }
 
 		MatrixMultithreading.finalMatrix[a][b] = result;
-
-   }
+    }
 }
