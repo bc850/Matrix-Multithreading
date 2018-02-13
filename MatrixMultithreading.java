@@ -190,9 +190,9 @@ class ThreadClass extends Thread {
    }
    
    public void run() {
-      System.out.println("Starting multiplication for thread [" + a + ", " + b + "]");
+      System.out.println("Starting multiplication for thread <" + a + "," + b + ">");
       matrixMultiplication();
-      System.out.println("Thread [" + a + ", " + b + "] result: " + MatrixMultithreading.finalMatrix[a][b]);
+      System.out.println("Thread <" + a + "," + b + "> result: " + MatrixMultithreading.finalMatrix[a][b]);
    }
    
    public void matrixMultiplication() {
